@@ -2,7 +2,7 @@
 
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/AhmeddSaid/Horizon-Peaks/main/horizon-peaks-logo.png" alt="Cover Image">
+  <img src="https://github.com/AhmeddSaid/Horizon-Peaks/blob/master/public/horizon-peaks-logo.png?raw=true" alt="Cover Image">
 </p>
 
 
