@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import Logo from "./Logo";
 import MainNav from "./MainNav";
-// import Uploader from "../data/Uploader";
+import Uploader from "../data/Uploader";
+import { HiCog } from "react-icons/hi2";
+import { useState } from "react";
 
 const StyledSidebar = styled.aside`
   background-color: var(--color-grey-0);
@@ -13,13 +15,30 @@ const StyledSidebar = styled.aside`
   gap: 3.2rem;
 `;
 
+const Setting = styled.div`
+  position: absolute;
+  top: 24px;
+  right: 10px;
+  scale: 2;
+  opacity: 0;
+`;
+
 function Sidebar() {
+  const [show, setShow] = useState(false);
+
+  const handleClick = () => {
+    setShow((show) => !show);
+  };
+
   return (
     <StyledSidebar>
       <Logo />
       <MainNav />
       {/* NOTE: DEV TEMP */}
-      {/* <Uploader /> */}
+      <Setting onClick={handleClick}>
+        <HiCog color="#462bc7" />
+      </Setting>
+      {show && <Uploader />}
       {/* NOTE: DEV TEMP */}
     </StyledSidebar>
   );
