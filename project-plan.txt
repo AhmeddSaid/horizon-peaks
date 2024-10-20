@@ -1,0 +1,181 @@
+The Project : Horizon Peaks :-
+  - A small boutique hotel with 8 luxurious wooden cabins.
+  - They need a custom built application to manage everything about the hotel :-
+      - Bookings.
+      - Cabins.
+      - Guests.
+  - This is the internal application used inside the hotel,
+    to check in guests as they arrive.
+  - They have nothing right now, so they also need the API.
+  - Later they will probably want a customer-facing website as well,
+    where customers will be able to book stays, using the same API.
+
+  Step 1 : Project Requirements From The Business :-
+
+    - Authentication :-
+        - Users of the app are hotel employees,
+          they need to be logged into the application to perform tasks.
+        - New users can only be signed up inside the applications,
+          (to guarantee that only actual hotel employees can get accounts).
+        - Users should be able to upload an avatar, and change their name and password.
+
+    - Cabins :-
+        - App needs a table view with all cabins,
+          showing the cabin photo, name, capacity, price, and current discount.
+        - Users should be able to update or delete a cabin,
+          and to create new cabins (including uploading a photo).
+
+    - Bookings :-
+        - App needs a table view with all bookings,
+          showing arrival and departure dates, status, and paid amount,
+          as well as cabin and guest data.
+        - The booking status can be :
+            - "unconfirmed" (booked but not yet checked in).
+            - "checked in".
+            - "checked out".
+        - The table should be filterable by this important status.
+        - Other booking data includes :
+            - Number of guests.
+            - Number of nights.
+            - Guest observations.
+            - Whether they booked breakfast, breakfast price.
+
+    - Check In/Out :-
+        - Users should be able to delete, check in, or check out a booking,
+          as the guest arrives (no editing necessary for now).
+        - Booking may not have been paid yet on guest arrival,
+          therefore, on check in, users need to accept payment (outside the app)
+          and then confirm that payment has been received (inside the app).
+        - On check in, the guest should have the ability to
+          add breakfast for the entire stay, if they hadn't already.
+
+    - Guests :-      
+        - Guest data should contain :
+            - Full name.
+            - Email.
+            - National ID.
+            - Nationality.
+            - Country flag for easy identification.
+
+    - Dashboard :-
+        - The initial app screen should be a dashboard,
+          to display important information for the last 7, 30, or 90 days :
+            - A list of guests checking in and out on the current day.
+                -Users should be able to perform these task from here.
+            - Statistics on recent bookings, sales, check ins, and occupancy rate.
+            - A chart showing all daily hotel sales, showing both :
+                - "total" sales.
+                - "extras" sales (only breakfast at the moment).
+            - A chart showing statistics on stay durations,
+              as this is an important metric for the hotel.
+
+    - Settings :-
+        - Users should be able to define a few application-wide settings :
+            - Breakfast price.
+            - Min and Max nights/booking.
+            - Max guests/booking.
+        - App needs a dark mode.      
+
+  Step 2 : Features :-
+      - Feature Categories :
+          [1] Bookings.
+          [2] Cabins.
+          [3] Guests.
+          [4] Dashboard.
+          [5] Check in and out.
+          [6] App Settings.
+          [7] Authentication.
+
+  Step 3 : Pages :-
+      - Necessary Pages :
+          [1] Dashboard           "/dashboard".
+          [2] Bookings            "/bookings".
+          [3] Cabins              "/cabins".
+          [4] Booking check in    "/checkin/:bookingID".
+          [5] App settings        "/settings".
+          [6] User sign up        "/users".
+          [7] Login               "/login".
+          [8] Account settings    "/account".
+
+  Step 4 : Client-Side Rendering (CSR) OR Server Side Rendering (SSR) ?
+      - CSR With Plain React :
+        - Used to build Single-Page Applications (SPAs).
+        - All HTML is rendered on the client.
+        - All JavaScript needs to be downloaded
+          before apps start running: bad for performance.
+        - One perfect use case :
+          - Apps that are used "internally" as tools inside companies,
+            that are entirely hidden behind a login.
+
+      - SSR With Framework (Nextjs, Remix) :
+        - Used to build Multi-Page Applications (MPAs).
+        - Some HTML is rendered in the server.
+        - More performant, as less JavaScript needs to be downloaded.
+        - The React team is moving more and more in this direction.
+
+  Step 5 : Technology Decisions :
+      - Routing => React Router (The standard for React SPAs).
+      - Styling => Styled components .
+          - Very popular way of writing component-scoped CSS, right inside JavaScript.
+      - Remote State Management => React Query.
+          - The best way of managing remote state, with features like :
+              - caching.
+              - automatic re-fetching.
+              - pre-fetching.
+              - offline support.
+            - alternatives are SWR and RTK Query, but this is the most popular.
+      - UI State Management => Context API.
+          - There is almost no UI state needed in this app,
+            so one simple context with useState will be enough, no need for redux.
+      - Form Management => React Hook Form.
+          - Handling bigger forms can be a lot of work,
+            such as manual state creation and error handling,
+            A library can simplify all this.
+      - Other Tools => React icons / React hot toast / Recharts / date-fns / Supabase.
+
+- What Is Supabase ?
+  - Service that allows developers to easily create a back-end with a Postgres database.
+  - Automatically creates a database and API so we can easily
+    request and receive data from the server.
+  - No back-end development needed.
+  - Perfect to get up and running quickly.
+  - Not just an API, Supabase aslo comes with easy-to-use
+    user authentication and file storage.
+
+- Modeling State :-
+  - State "Domains" / "Slices" :
+      [1] Bookings
+          - Bookings.
+          - Dashboard.
+          - Check in and out.
+      [2] Cabins
+      [3] Guests
+      [4] Settings
+          - App Settings.
+      [5] Users
+          - Authentication.
+
+  - All this state will be global remote state, stored within Supabase.
+  - THere will be one table for each state "slice" in the database.
+
+- The Booking Table :-
+  - Bookings are about a guest renting a cabin.
+  - So a booking needs information about what guest is booking which cabin,
+    we need to connect them.
+  - Supabase uses a Postgres DB, which is SQL (relational DB).
+    So we join tables using foreign keys.
+  - We connect a booking with a cabin by storing the cabin's id (primary key),
+    inside the booking cabinId (foreign key).
+    
+What Is React Query :-
+  - Powerful library for managing remote (server) state.
+  - Many features that allow us to write a lot less code,
+    while also making the UX a lot better.
+      - Data is stored in a cache.
+      - Automatic loading and error states.
+      - Automatic re-fetching keep state synced.
+      - Pre-fetching.
+      - Easy remote state mutation (updating).
+      - Offline support.
+  - Needed because remote state is fundamentally different from regular (UI) state.
+  
