@@ -14,8 +14,8 @@ function Logo() {
   const { isDarkMode } = useDarkMode();
 
   const src = isDarkMode
-    ? "horizon-peaks-logo-dark.png"
-    : "horizon-peaks-logo.png";
+    ? "/horizon-peaks-logo-dark.png"
+    : "/horizon-peaks-logo.png";
 
   return (
     <StyledLogo>
