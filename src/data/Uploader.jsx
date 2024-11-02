@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { isFuture, isPast, isToday } from "date-fns";
 import supabase from "../services/supabase";
 import Button from "../ui/Button";
@@ -102,6 +102,15 @@ async function createBookings() {
 
 function Uploader() {
   const [isLoading, setIsLoading] = useState(false);
+
+  // auto upload once every 24 hours
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      uploadBookings();
+    }, 86400000);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
   async function uploadAll() {
     setIsLoading(true);

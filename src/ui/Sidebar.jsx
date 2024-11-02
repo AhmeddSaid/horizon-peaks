@@ -18,9 +18,10 @@ const StyledSidebar = styled.aside`
 const Setting = styled.div`
   position: absolute;
   top: 24px;
-  right: 10px;
+  right: 20px;
   scale: 2;
-  opacity: 0;
+  opacity: 1;
+  cursor: pointer;
 `;
 
 function Sidebar() {
