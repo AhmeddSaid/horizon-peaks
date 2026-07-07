@@ -14,11 +14,12 @@ function UserTable() {
 
   return (
     <Menus>
-      <Table columns="0.6fr 1.5fr 2fr 1.5fr 0.5fr">
+      <Table columns="0.6fr 1.5fr 2fr 1fr 1.2fr 0.5fr">
         <Table.Header>
           <div>Avatar</div>
           <div>Full name</div>
           <div>Email</div>
+          <div>Role</div>
           <div>Created at</div>
           <div></div>
         </Table.Header>

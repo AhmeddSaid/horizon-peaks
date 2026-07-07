@@ -25,11 +25,12 @@ export async function deleteUser(id) {
   }
 }
 
-export async function updateUser({ id, email, fullName }) {
+export async function updateUser({ id, email, fullName, role }) {
   const { error } = await supabase.rpc("update_user_by_id", {
     user_id: id,
     new_email: email,
     new_full_name: fullName,
+    new_role: role,
   });
 
   if (error) {

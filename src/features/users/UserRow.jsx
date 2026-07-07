@@ -6,6 +6,7 @@ import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import EditUserForm from "./EditUserForm";
 import { useDeleteUser } from "./useDeleteUser";
+import { useUser } from "../authentication/useUser";
 
 const Avatar = styled.img`
   display: block;
@@ -30,9 +31,25 @@ const Email = styled.div`
   color: var(--color-grey-500);
 `;
 
+const RoleTag = styled.span`
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 0.4rem 1.2rem;
+  border-radius: 100px;
+  width: fit-content;
+  background-color: ${(props) =>
+    props.role === "Admin" ? "var(--color-green-100)" : "var(--color-grey-100)"};
+  color: ${(props) =>
+    props.role === "Admin" ? "var(--color-green-700)" : "var(--color-grey-700)"};
+`;
+
 function UserRow({ user }) {
   const { isDeleting, deleteUser } = useDeleteUser();
-  const { id: userId, email, full_name, avatar, created_at } = user;
+  const { user: currentUser } = useUser();
+  const { id: userId, email, full_name, role, avatar, created_at } = user;
+
+  const isAdmin = currentUser?.user_metadata?.role === "Admin";
 
   const formattedDate = new Date(created_at).toLocaleDateString("en-US", {
     month: "short",
@@ -45,34 +62,37 @@ function UserRow({ user }) {
       <Avatar src={avatar || "default-user.jpg"} alt={`${full_name}'s avatar`} />
       <FullName>{full_name || "—"}</FullName>
       <Email>{email}</Email>
+      <RoleTag role={role}>{role || "Moderator"}</RoleTag>
       <div>{formattedDate}</div>
       <div>
-        <Modal>
-          <Menus.Menu>
-            <Menus.Toggle id={userId} />
-            <Menus.List id={userId}>
-              <Modal.Open opens="edit">
-                <Menus.Button icon={HiPencil}>Edit</Menus.Button>
-              </Modal.Open>
+        {isAdmin && (
+          <Modal>
+            <Menus.Menu>
+              <Menus.Toggle id={userId} />
+              <Menus.List id={userId}>
+                <Modal.Open opens="edit">
+                  <Menus.Button icon={HiPencil}>Edit</Menus.Button>
+                </Modal.Open>
 
-              <Modal.Open opens="delete">
-                <Menus.Button icon={HiTrash}>Delete</Menus.Button>
-              </Modal.Open>
-            </Menus.List>
+                <Modal.Open opens="delete">
+                  <Menus.Button icon={HiTrash}>Delete</Menus.Button>
+                </Modal.Open>
+              </Menus.List>
 
-            <Modal.Window name="edit">
-              <EditUserForm userToEdit={user} />
-            </Modal.Window>
+              <Modal.Window name="edit">
+                <EditUserForm userToEdit={user} />
+              </Modal.Window>
 
-            <Modal.Window name="delete">
-              <ConfirmDelete
-                resourceName="user"
-                disabled={isDeleting}
-                onConfirm={() => deleteUser(userId)}
-              />
-            </Modal.Window>
-          </Menus.Menu>
-        </Modal>
+              <Modal.Window name="delete">
+                <ConfirmDelete
+                  resourceName="user"
+                  disabled={isDeleting}
+                  onConfirm={() => deleteUser(userId)}
+                />
+              </Modal.Window>
+            </Menus.Menu>
+          </Modal>
+        )}
       </div>
     </Table.Row>
   );
